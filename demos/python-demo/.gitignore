@@ -1,0 +1,4 @@
+secrets.vibe
+__pycache__/
+*.pyc
+.venv

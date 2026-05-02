@@ -1,0 +1,48 @@
+name: Node CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  node:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: chmod +x dist/cli/index.js
+      - run: npm run lint
+      - run: npm test -- --coverage
+      - uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage/coverage-final.json
+          flags: node-${{ matrix.node-version }}
+
+  interop:
+    needs: node
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: npm ci
+      - run: npm run build
+      - run: chmod +x dist/cli/index.js
+      - run: pip install --upgrade pip && pip install -e .[dev]
+        working-directory: python-sdk
+      - run: pytest python-sdk/tests/interoperability/ -v --no-header -k "not skip"

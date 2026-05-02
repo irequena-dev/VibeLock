@@ -1,0 +1,12 @@
+{
+  "name": "vibelock-node-demo",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "dependencies": {
+    "vibelock": "file:../.."
+  }
+}

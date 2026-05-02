@@ -1,0 +1,67 @@
+{
+  "name": "vibelock",
+  "version": "1.0.0",
+  "description": "Hardened secrets for fast-paced coding. Encrypted local vault that replaces .env files.",
+  "keywords": [
+    "secrets",
+    "env",
+    "encryption",
+    "cli",
+    "vault",
+    "aes-256",
+    "developer-tools",
+    "security"
+  ],
+  "author": "ismaibz",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "vibelock": "dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "test": "vitest",
+    "lint": "eslint .",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ismaibz/vibelock.git"
+  },
+  "homepage": "https://github.com/ismaibz/vibelock#readme",
+  "bugs": {
+    "url": "https://github.com/ismaibz/vibelock/issues"
+  },
+  "dependencies": {
+    "@inquirer/confirm": "^6.0.12",
+    "@inquirer/input": "^4.0.0",
+    "@inquirer/password": "^5.0.12",
+    "commander": "^13.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.1",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^7.18.0",
+    "vitest": "^3.1.3",
+    "@vitest/coverage-v8": "^3.1.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
