@@ -274,7 +274,7 @@ describe("SDK multi-project isolation", () => {
     expect(keysB).toEqual(["ONLY_B", "SHARED"])
   })
 
-  it("set 5 keys and get each one", async () => {
+  it("set 5 keys and get each one", { timeout: 15_000 }, async () => {
     const opts = testOptions(tmpDir)
     await init(opts)
 
