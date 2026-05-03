@@ -6,6 +6,7 @@ import { getMasterKeyProvider } from "../core/masterkey.js";
 import { create, addSecret, getSecret, removeSecret, listSecrets, exists, load, getVaultKeysPath } from "../core/vault.js";
 import { promptSecret, promptConfirm, promptInput } from "./prompt.js";
 import { parseRunOptions, runCommand } from "./run.js";
+import { parseDockerRunOptions, dockerRunCommand } from "./docker.js";
 import { grant } from "./grant.js";
 import { addEnvCommands } from "./env.js";
 import { randomBytes } from "node:crypto";
@@ -434,6 +435,27 @@ program
       const runArgs = process.argv.slice(3);
       const runOptions = parseRunOptions(runArgs);
       const exitCode = await runCommand(runOptions);
+      process.exit(exitCode);
+    } catch (error) {
+      console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
+      process.exit(1);
+    }
+  });
+
+const docker = program
+  .command("docker")
+  .description("Docker integration commands");
+
+docker
+  .command("run")
+  .argument("[args...]", "")
+  .description("Run a Docker container with secrets injected via stdin\nUsage: vibelock docker run [options] -- [docker-args] <image> [cmd...]")
+  .allowUnknownOption()
+  .action(async () => {
+    try {
+      const runArgs = process.argv.slice(4);
+      const runOptions = parseDockerRunOptions(runArgs);
+      const exitCode = await dockerRunCommand(runOptions);
       process.exit(exitCode);
     } catch (error) {
       console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);

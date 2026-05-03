@@ -194,6 +194,30 @@ The path is saved in the vault file — subsequent commands auto-discover it.
 
 ---
 
+## Docker
+
+Inject secrets into Docker containers without writing them to disk:
+
+```bash
+# Basic usage
+vibelock docker run -- myimage
+
+# With docker options and a command
+vibelock docker run -- --rm -p 8080:80 --name myapp myimage:latest npm start
+
+# Filter secrets
+vibelock docker run --only API_KEY,DB_PASSWORD -- myimage
+
+# Add prefix
+vibelock docker run --prefix APP_ -- myimage
+```
+
+Secrets are piped to docker via stdin (`docker run --env-file /dev/stdin ...`) — never written to disk and never visible in `ps aux` or `docker inspect` output.
+
+Everything after `--` is forwarded to `docker run` as `[docker-args] <image> [cmd...]`.
+
+---
+
 ## CLI Reference
 
 | Command | Description |
@@ -208,6 +232,7 @@ The path is saved in the vault file — subsequent commands auto-discover it.
 | `vibelock remove-env <key>` | Remove an environment variable |
 | `vibelock status` | Show vault info (secrets + env count) |
 | `vibelock run -- <cmd>` | Run command with all vars injected |
+| `vibelock docker run -- <image>` | Run Docker container with secrets injected via stdin |
 | `vibelock grant <user>` | Transfer ownership to system user |
 | `vibelock cleanup` | Delete vault and master key |
 
