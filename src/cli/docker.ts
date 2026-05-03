@@ -136,6 +136,14 @@ export function parseDockerRunOptions(argv: string[]): DockerRunOptions {
 }
 
 export function formatEnvForStdin(secrets: Record<string, string>): string {
+  for (const [key, value] of Object.entries(secrets)) {
+    if (/[\r\n]/.test(value)) {
+      throw new Error(
+        `Secret '${key}' contains a newline character, which is not supported by 'docker --env-file'. ` +
+          `Use 'vibelock run' instead, or remove newlines from the value.`
+      );
+    }
+  }
   return Object.entries(secrets)
     .map(([k, v]) => `${k}=${v}`)
     .join("\n");

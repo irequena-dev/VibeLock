@@ -261,6 +261,22 @@ describe("formatEnvForStdin", () => {
     expect(result).toBe("ONLY=value");
     expect(result.endsWith("\n")).toBe(false);
   });
+
+  it("throws when a value contains \\n (docker --env-file does not support multi-line values)", () => {
+    expect(() => formatEnvForStdin({ PEM: "-----BEGIN-----\nABC\n-----END-----" })).toThrow(
+      /Secret 'PEM' contains a newline character/
+    );
+  });
+
+  it("throws when a value contains \\r", () => {
+    expect(() => formatEnvForStdin({ KEY: "value\rmore" })).toThrow(
+      /Secret 'KEY' contains a newline character/
+    );
+  });
+
+  it("error message points users to 'vibelock run' as an alternative", () => {
+    expect(() => formatEnvForStdin({ KEY: "a\nb" })).toThrow(/vibelock run/);
+  });
 });
 
 describe("buildDockerRunArgs", () => {
@@ -497,5 +513,25 @@ exit 0
 
     expect(result.code).toBe(1);
     expect(result.stderr).toContain("Missing docker image");
+  });
+
+  it("errors with a clear message when a secret contains a newline", async () => {
+    await set("MULTILINE", "line1\nline2", {
+      vaultPath: testVault.vaultPath,
+      projectId: testVault.projectId,
+    });
+
+    const result = await runVibelockDockerRun(
+      [
+        "--project", testVault.projectId,
+        "--vault", testVault.vaultPath,
+        "--", "alpine",
+      ],
+      testVault.tempDir
+    );
+
+    expect(result.code).toBe(1);
+    expect(result.stderr).toContain("MULTILINE");
+    expect(result.stderr).toContain("newline character");
   });
 });
