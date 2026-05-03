@@ -192,6 +192,15 @@ describe("parseDockerRunOptions", () => {
     });
   });
 
+  it("accepts -v as shorthand for --vault (matches README global option)", () => {
+    const result = parseDockerRunOptions(["-v", "custom.vibe", "--", "myimage"]);
+
+    expect(result).toMatchObject({
+      vaultPath: "custom.vibe",
+      image: "myimage",
+    });
+  });
+
   it("parses self-contained flags with =", () => {
     const result = parseDockerRunOptions([
       "--", "--name=myapp", "--env=KEY=value", "myimage",

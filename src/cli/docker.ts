@@ -62,6 +62,7 @@ export function parseDockerRunOptions(argv: string[]): DockerRunOptions {
         break;
 
       case "--vault":
+      case "-v":
         options.vaultPath = argv[i + 1];
         i += 2;
         break;
