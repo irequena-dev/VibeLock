@@ -7,6 +7,7 @@ import { create, addSecret, getSecret, removeSecret, listSecrets, exists, load, 
 import { promptSecret, promptConfirm, promptInput } from "./prompt.js";
 import { parseRunOptions, runCommand } from "./run.js";
 import { parseDockerRunOptions, dockerRunCommand } from "./docker.js";
+import { parseDockerComposeOptions, dockerComposeCommand } from "./docker-compose.js";
 import { grant } from "./grant.js";
 import { addEnvCommands } from "./env.js";
 import { randomBytes } from "node:crypto";
@@ -456,6 +457,23 @@ docker
       const runArgs = process.argv.slice(4);
       const runOptions = parseDockerRunOptions(runArgs);
       const exitCode = await dockerRunCommand(runOptions);
+      process.exit(exitCode);
+    } catch (error) {
+      console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
+      process.exit(1);
+    }
+  });
+
+docker
+  .command("compose")
+  .argument("[args...]", "")
+  .description("Run Docker Compose with secrets injected as environment variables\nUsage: vibelock docker compose [options] -- <compose-args...>")
+  .allowUnknownOption()
+  .action(async () => {
+    try {
+      const composeArgs = process.argv.slice(4);
+      const composeOptions = parseDockerComposeOptions(composeArgs);
+      const exitCode = await dockerComposeCommand(composeOptions);
       process.exit(exitCode);
     } catch (error) {
       console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);

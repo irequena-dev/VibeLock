@@ -216,6 +216,44 @@ Secrets are piped to docker via stdin (`docker run --env-file /dev/stdin ...`) â
 
 Everything after `--` is forwarded to `docker run` as `[docker-args] <image> [cmd...]`.
 
+### Docker Compose
+
+Inject secrets into Docker Compose services via environment variable substitution:
+
+```bash
+# Basic usage
+vibelock docker compose -- up
+
+# Detached mode with build
+vibelock docker compose -- up -d --build
+
+# Filter secrets
+vibelock docker compose --only DB_PASSWORD,API_KEY -- up
+
+# Add prefix
+vibelock docker compose --prefix APP_ -- up
+
+# Specific project
+vibelock docker compose --project prod --vault ./prod.vibe -- up
+```
+
+Secrets are injected as environment variables into the `docker compose` process. Use `${VAR}` substitution in your `compose.yml`:
+
+```yaml
+services:
+  web:
+    image: myapp:latest
+    environment:
+      - DB_PASSWORD=${DB_PASSWORD}
+      - API_KEY=${API_KEY}
+  db:
+    image: postgres:16
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+```
+
+Unlike `docker run`, compose supports secrets with newline characters (e.g., PEM certificates) since they are passed via process environment, not `--env-file`.
+
 ---
 
 ## CLI Reference
@@ -233,6 +271,7 @@ Everything after `--` is forwarded to `docker run` as `[docker-args] <image> [cm
 | `vibelock status` | Show vault info (secrets + env count) |
 | `vibelock run -- <cmd>` | Run command with all vars injected |
 | `vibelock docker run -- <image>` | Run Docker container with secrets injected via stdin |
+| `vibelock docker compose -- <args>` | Run Docker Compose with secrets injected as env vars |
 | `vibelock grant <user>` | Transfer ownership to system user |
 | `vibelock cleanup` | Delete vault and master key |
 
