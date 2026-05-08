@@ -30,7 +30,7 @@
     "vibelock": "dist/cli/index.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && chmod +x dist/cli/index.js",
     "dev": "tsx src/index.ts",
     "test": "vitest",
     "lint": "eslint .",

@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
 ```bash
 # Install from PyPI (when released)
-pip install vibelock-python
+pip install vibelock
 
 # Install from source
 git clone https://github.com/ismaibz/vibelock.git
