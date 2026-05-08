@@ -38,11 +38,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ismaibz/vibelock.git"
+    "url": "git+https://github.com/irequena-dev/VibeLock.git"
   },
-  "homepage": "https://github.com/ismaibz/vibelock#readme",
+  "homepage": "https://github.com/irequena-dev/VibeLock#readme",
   "bugs": {
-    "url": "https://github.com/ismaibz/vibelock/issues"
+    "url": "https://github.com/irequena-dev/VibeLock/issues"
   },
   "dependencies": {
     "@inquirer/confirm": "^6.0.12",
